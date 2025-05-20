@@ -1,0 +1,15 @@
+class Solution:
+    # Function to find the length of a loop in the linked list.
+    def countNodesInLoop(self, head):
+        #code here
+        visited = {}
+        count = 0
+
+        while head:
+            count += 1
+            if head in visited:
+                return count - visited[head]
+            visited[head] = count
+            head = head.next
+
+        return 0
