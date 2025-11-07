@@ -1,0 +1,29 @@
+class Solution {
+  public:
+    static bool comp(vector<int> &a,vector<int> &b) {
+        return a[1] < b[1];
+    }
+    int maxProfit(vector<vector<int>> &jobs) {
+        // code here
+        int n=jobs.size();
+        // Sort jobs by end time
+        sort(jobs.begin(), jobs.end(),comp);
+        vector<int> endTimes(n);
+        for(int i=0;i<n;i++) {
+            endTimes[i]=jobs[i][1];
+        }
+        vector<long long> dp(n);
+        dp[0]=jobs[0][2]; // profit of first job
+        for(int i=1;i<n;i++) {
+            long long profitInclude=jobs[i][2];
+            // find the last job that ends <= start of current job
+            int idx=upper_bound(endTimes.begin(), endTimes.end(),jobs[i][0]) - endTimes.begin()-1;
+            if(idx>=0){
+                profitInclude+=dp[idx];
+            }
+            long long profitExclude=dp[i-1];
+            dp[i]=max(profitInclude,profitExclude);
+        }
+        return dp[n-1];
+    }
+};
