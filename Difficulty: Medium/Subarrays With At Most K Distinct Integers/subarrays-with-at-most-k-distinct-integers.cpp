@@ -1,18 +1,24 @@
 class Solution {
-  public:
+public:
     int countAtMostK(vector<int> &arr, int k) {
-        // code here
-        int l=0, cnt=0;
+        if (k == 0) return 0;
+
         unordered_map<int,int> freq;
-        for(int r=0;r<arr.size();r++){
+        int l = 0, ans = 0;
+
+        for (int r = 0; r < arr.size(); r++) {
             freq[arr[r]]++;
-            while(freq.size()>k){
+
+            while (freq.size() > k) {
                 freq[arr[l]]--;
-                if(freq[arr[l]]==0) freq.erase(arr[l]);
+                if (freq[arr[l]] == 0)
+                    freq.erase(arr[l]);
                 l++;
             }
-            cnt+=r-l+1;
+
+            ans += (r - l + 1);
         }
-        return cnt;
+
+        return ans;
     }
 };
