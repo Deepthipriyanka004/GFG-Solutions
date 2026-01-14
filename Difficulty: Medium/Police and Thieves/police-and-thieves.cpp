@@ -1,25 +1,28 @@
 class Solution {
-  public:
+public:
     int catchThieves(vector<char> &arr, int k) {
-        // Code here
-        int n = arr.size();
-        int i = 0, j = 0; 
-        int count = 0;
-        while (i < n && j < n) {
-            while (i < n && arr[i] != 'P') i++;
-            while (j < n && arr[j] != 'T') j++;
-            if (i < n && j < n && abs(i - j) <= k) {
-                count++; 
-                i++; 
-                j++; 
-            }
-            else if (j < n && j < i) {
+        vector<int> police;
+        vector<int> thief;
+
+        // Collect indices of police and thieves
+        for(int i = 0; i < arr.size(); i++){
+            if(arr[i] == 'P') police.push_back(i);
+            else thief.push_back(i);
+        }
+
+        int i = 0, j = 0, caught = 0;
+
+        // Try to match nearest possible police-thief pair
+        while(i < police.size() && j < thief.size()){
+            if(abs(police[i] - thief[j]) <= k){
+                caught++;
+                i++;
                 j++;
             }
-            else if (i < n && i < j) {
-                i++;
-            }
+            else if(thief[j] < police[i]) j++;
+            else i++;
         }
-        return count;
+
+        return caught;
     }
 };
