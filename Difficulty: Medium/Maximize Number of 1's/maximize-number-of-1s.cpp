@@ -2,21 +2,18 @@ class Solution {
   public:
     int maxOnes(vector<int>& arr, int k) {
         // code here
-        int n = arr.size();
-        int i = 0,j = 0;
-        int count = 0;
-        int ans = 0;
-        while(i<n && j<n){
-            if(arr[j] == 0)
-            count ++;
-            while(count>k){
-                if(arr[i] == 0)
-                count--;
+        int maxi=0,c0=0,i=0,j=0;
+        int n=arr.size();
+        for(j=0;j<n;j++){
+            if(arr[j]==0)
+                c0++;
+            while(c0>k){
+                if(arr[i]==0)
+                    c0--;
                 i++;
             }
-            ans = max(ans, j-i+1);
-            j++;
+            maxi=max(maxi,j-i+1);
         }
-        return ans;
+        return maxi;
     }
 };
