@@ -1,28 +1,27 @@
 class Solution {
   public:
-    int fun(int l, int r, vector<int> &arr, int &k, int &ans){
-        if(l>=r){
-            return r;
+    bool good(vector<int>&arr,int k,int m){
+        int totalhours=0;
+        for(int i=0;i<arr.size();i++){
+            totalhours+=ceil((double)arr[i]/m);
         }
-        int m = l + (r-l)/2;
-        int count = 0;
-        for(auto z : arr){
-            count += (z/m);
-            if(z%m)
-                count++;
-        }
-        if(count > k)
-            return fun(m+1, r, arr, k, ans);
-        return fun(l, m, arr, k, ans);
+        return totalhours<=k;
     }
     int kokoEat(vector<int>& arr, int k) {
         // Code here
-        int maxi = INT_MIN;
-        for(auto z : arr){
-            maxi = max(maxi, z);
+        int low=1;
+        int high=*max_element(arr.begin(),arr.end());
+        int ans=0;
+        while(low<=high){
+            int mid=low+(high-low)/2;
+            if(good(arr,k,mid)){
+                ans=mid;
+                high=mid-1;
+            }
+            else{
+                low=mid+1;
+            }
         }
-        int ans = -1;
-
-        return fun(1, maxi, arr, k, ans);
+        return ans;
     }
 };
