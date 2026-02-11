@@ -1,27 +1,28 @@
 class Solution {
   public:
-    long long getCost(vector<int>& heights, vector<int>& cost, int target) {
-        long long total = 0;
-        for (int i = 0; i < heights.size(); ++i)
-            total += 1LL * abs(heights[i] - target) * cost[i];
-        return total;
+    int FindCost(int h , vector<int> &heights , vector<int> &cost){
+        int n = heights.size() , Cost = 0;
+        for(int i = 0; i < n; i++)
+            Cost += abs(h - heights[i]) * cost[i];
+        return Cost;
     }
     int minCost(vector<int>& heights, vector<int>& cost) {
         // code here
-        int low = *min_element(heights.begin(), heights.end());
-        int high = *max_element(heights.begin(), heights.end());
-        long long ans = LLONG_MAX;
-
-        while (low <= high) {
-            int mid = (low + high) / 2;
-            long long cost1 = getCost(heights, cost, mid);
-            long long cost2 = getCost(heights, cost, mid + 1);
-            ans = min(cost1, cost2);
-
-            if (cost1 < cost2) high = mid - 1;
-            else low = mid + 1;
+        int s = INT_MAX , e = INT_MIN;
+        for(int x : heights){
+            s = min(s , x);
+            e = max(e , x);
         }
-
-        return (int)ans;
+        int ans = INT_MAX;
+        while(s <= e){
+            int m = (s + e) / 2;
+            int c1 = FindCost(m , heights , cost);
+            int c2 = FindCost(m + 1 , heights , cost);
+            if(c1 <= c2)
+                ans = c1 , e = m - 1;
+            else
+                s = m + 1;
+        }
+        return ans;
     }
 };
