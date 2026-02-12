@@ -1,38 +1,44 @@
 class Solution {
   public:
-    bool canReachHeight(vector<int>& arr, int k, int w, int target) {
+    bool isPossible(vector<int> arr, int k, int w, int minHeight){
         int n = arr.size();
-        vector<int> water(n + 1, 0);  // difference array
-        long long ops = 0;
-        long long curr = 0;
-        for (int i = 0; i < n; ++i) {
-            curr += water[i];  // Apply current watering
-            int effectiveHeight = arr[i] + curr;
-            if (effectiveHeight < target) {
-                int add = target - effectiveHeight;
-                ops += add;
-                if (ops > k) return false;
-                curr += add;
-                if (i + w < n)
-                    water[i + w] -= add;
+        unordered_map<int, int> mp{};
+        int curWt = 0;
+        for(int i = 0; i < n && k >= 0; i++){
+            if(mp.count(i)){
+                curWt += mp[i];
             }
+            int curHt = arr[i] + curWt;
+            if(curHt >= minHeight) continue;
+            if(minHeight - curHt > k) return false;
+            curWt += (minHeight-curHt);
+            k -= (minHeight-curHt);
+            mp[i+w] -= (minHeight-curHt);
         }
         return true;
     }
     int maxMinHeight(vector<int> &arr, int k, int w) {
         // code here
-        int low = *min_element(arr.begin(), arr.end());
-        int high = low + k;
-        int answer = low;
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            if (canReachHeight(arr, k, w, mid)) {
-                answer = mid;
-                low = mid + 1;
-            } else {
-                high = mid - 1;
+        int n = arr.size();
+        int minHeight = INT_MAX;
+        int maxHeight = INT_MIN;
+        for(int i = 0; i < n; i++){
+            minHeight = min(minHeight, arr[i]);
+            maxHeight = max(maxHeight, arr[i]);
+        }
+        int l = minHeight;
+        int h = maxHeight + k;
+        int res = l;
+        while(l <= h){
+            int mid = l + (h-l)/2;
+            if(isPossible(arr, k, w, mid)){
+                res = max(res, mid);
+                l = mid+1;
+            }
+            else{
+                h = mid-1;
             }
         }
-        return answer;
+        return res;
     }
 };
