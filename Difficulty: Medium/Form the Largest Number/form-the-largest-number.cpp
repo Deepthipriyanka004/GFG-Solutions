@@ -1,14 +1,17 @@
 class Solution {
   public:
-    static bool cmp(int & i, int & j){
-        return to_string(i)+to_string(j) > to_string(j)+to_string(i);
+    static bool compare(int a, int b){
+        string s1 = to_string(a);
+        string s2 = to_string(b);
+        return s1 + s2 > s2 + s1;
     }
     string findLargest(vector<int> &arr) {
         // code here
-        sort(arr.begin(),arr.end(), cmp);
-        string res = "";
-        for(auto it : arr)
-        res += to_string(it);
-        return res[0]=='0' ? "0" : res;
+        sort(arr.begin(), arr.end(), compare);
+        string ans = "";
+        for(auto &x : arr){
+            ans += to_string(x);
+        }
+        return ans[0] == '0' ? "0" : ans;
     }
 };
