@@ -1,26 +1,30 @@
 class Solution {
   public:
-    int longestCommonSum(vector<int> &arr1, vector<int> &arr2) {
-        // Code here.
-        vector<int> temp(arr1.size());
-        for(int i=0;i<arr1.size();i++){
-            temp[i]=arr1[i]-arr2[i];
+    int equalSumSpan(vector<int> &a1, vector<int> &a2) {
+        int n = a1.size();
+        
+        unordered_map<int, int> mp;
+        mp.reserve(n);                 // Avoid rehashing
+        mp.max_load_factor(0.7);       // Improve performance
+        
+        int prefixSum = 0;
+        int maxLen = 0;
+        
+        for(int i = 0; i < n; i++) {
+            prefixSum += (a1[i] - a2[i]);
+            
+            if(prefixSum == 0) {
+                maxLen = i + 1;
+            }
+            
+            // Store only first occurrence
+            if(mp.find(prefixSum) == mp.end()) {
+                mp[prefixSum] = i;
+            } else {
+                maxLen = max(maxLen, i - mp[prefixSum]);
+            }
         }
-        int ans =0 ;
-        int rem =0 ;
-        map<int,int> mp;
-        for(int i=0;i<temp.size();i++){
-            rem+=temp[i];
-            if(rem == 0){
-                ans = max(i+1,ans);
-            }
-            if(mp.find(rem)!=mp.end()){
-                ans = max(ans,i-mp[rem]);
-            }
-            if(mp.find(rem)==mp.end()){
-                mp[rem] = i;
-            }
-        }
-        return ans;
+        
+        return maxLen;
     }
 };
