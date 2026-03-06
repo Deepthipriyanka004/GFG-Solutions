@@ -1,33 +1,36 @@
 class Solution {
   public:
-    string smallestWindow(string &s, string &p) {
+    string minWindow(string &s, string &t) {
         // code here
-        vector<int>mp(256,0);
-        int sIndex=-1;
-        int minLen=INT_MAX;
-        for(int i=0;i<p.size();i++){
-            mp[p[i]]++;
+        int n = s.size();
+        int m = t.size();
+        int start = -1;
+        int cnt = 0;
+        int l=0,r=0,mini=1e9;
+        map<char,int>mp;
+        for(auto it:t){
+            mp[it]++;
         }
-        int c=0;
-        int m=p.size();
-        for(int j=0,i=0;j<s.size();j++){
-            if(mp[s[j]]>0)
-            c++;
-            mp[s[j]]--;
-            while(c==m){
-                if(j-i+1<minLen){
-                    sIndex=i;
-                    minLen=j-i+1;
-                }
-                mp[s[i]]++;
-                if(mp[s[i]]>0)
-                c--;
-                i++;
-                
+        while(r<n){
+            if(mp[s[r]]>0){
+                cnt++;
             }
+            mp[s[r]]--;
+            while(cnt==m){
+                // shrink while possible
+                if(r-l+1<mini){
+                    mini = r-l+1;
+                    start = l;
+                }
+                mp[s[l]]++;
+                if(mp[s[l]]>0){
+                    cnt--;
+                }
+                l++;
+            }
+            r++;
         }
-        if(sIndex==-1) return "";
-        else
-        return s.substr(sIndex,minLen);
+        if(start==-1)return"";
+        return s.substr(start,mini);
     }
 };
